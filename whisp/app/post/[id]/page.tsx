@@ -1,4 +1,4 @@
-import { PostCard } from "@/app/ui/basics/posts/postCard"
+import { PostCard } from "@/app/ui/posts/postCard"
 
 async function getPost(id: string) {
   const res = await fetch(`http://localhost:3000/api/posts`)

@@ -1,6 +1,8 @@
 'use client'
 import { Box, VStack, Text, Button, HStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
+import { PostCard } from './ui/posts/postCard'
+import NavBar from './ui/layout/navBar'
 
 export default function Home() {
   const [posts, setPosts] = useState([])
@@ -21,24 +23,22 @@ export default function Home() {
   }, [])
 
   return (
-    <Box p={6} maxW="4xl" mx="auto">
-      <VStack align="stretch">
+    <div style={{ 
+      display: 'grid',
+      gridTemplateColumns: '1fr 4fr',
+      minHeight: '100vh' }}>
+        
+      <div style={{ padding: '1rem' }}>
+      <NavBar/>
+      </div>
+      <div>
+      <Box p={6} maxW="4xl" mx="auto">
         {posts.map((post: any) => (
-          <Box key={post.id} p={4} borderWidth={1} borderRadius="lg" shadow="sm">
-            <Text mb={3}>{post.content}</Text>
-            <HStack>
-              <Button
-                colorScheme="red"
-                variant="outline"
-                size="sm"
-                onClick={() => likePost(post.id)}
-              >
-                {post.likes}
-              </Button>
-            </HStack>
-          </Box>
+          <PostCard key={post.id} content={post.content} likes={post.likes} />
         ))}
-      </VStack>
-    </Box>
+      </Box>
+      </div>
+    </div>
+      
   )
 }
