@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { CardRoot, CardHeader, CardBody, CardFooter, Text, AvatarRoot, AvatarImage, AvatarFallback, Flex, IconButton, VStack, HStack, Box } from '@chakra-ui/react'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import FavoriteIcon from '@mui/icons-material/Favorite'
@@ -35,9 +36,11 @@ interface PostCardProps {
 export function PostCard({ post, currentUserId, onLike }: PostCardProps) {
   const [showComments, setShowComments] = useState(false)
   const [comments, setComments] = useState<PostComment[]>(post.comments || [])
+  const [likes, setLikes] = useState<Like[]>(post.likes || [])
+  const router = useRouter()
 
-  const userLiked = post.likes.some((like) => like.userId.toString() === currentUserId)
-  const likesCount = post.likes.length
+  const userLiked = likes.some((like) => like.userId.toString() === currentUserId)
+  const likesCount = likes.length
 
   const formatDate = (date: string) => {
     const d = new Date(date)
@@ -49,12 +52,31 @@ export function PostCard({ post, currentUserId, onLike }: PostCardProps) {
     })
   }
 
-  const toggleComments = () => setShowComments((prev) => !prev)
+  const toggleComments = () => {
+    if (!currentUserId) {
+      router.push('/login')
+      return
+    }
+    setShowComments((prev) => !prev)
+  }
 
   const handleCommentCreated = (newComment: PostComment) => {
     setComments((prev) => [...prev, newComment])
   }
 
+  const handleLike = async () => {
+  if (!onLike) return  
+
+  if (userLiked) {
+    setLikes((prev) => prev.filter((l) => l.userId.toString() !== currentUserId))
+  } else {
+    setLikes((prev) => [...prev, { userId: currentUserId ?? 'temp' }])
+  }
+
+  onLike(post.id)
+}
+  console.log('currentUserId:', currentUserId)
+  console.log('likes:', likes)
   return (
     <CardRoot mx="auto" mt={4} p={4} borderRadius="md" shadow="md" bg="brand.900" color="brand.100" border={1}>
       <CardHeader display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" gap={4}>
@@ -79,13 +101,16 @@ export function PostCard({ post, currentUserId, onLike }: PostCardProps) {
       <CardFooter display="flex" gap={6} justifyContent="flex-start">
         <HStack gap={2}>
           <IconButton
-            size="sm"
-            variant="ghost"
-            onClick={() => onLike?.(post.id)}
-            aria-label="Like post"
+            onClick={() => {
+              if (!currentUserId) {
+                router.push('/login')
+              } else {
+                handleLike()
+              }
+            }}
             _hover={{ opacity: 0.8 }}
           >
-            {userLiked ? <FavoriteIcon style={{ color: '#FF6B6B' }} /> : <FavoriteBorderIcon style={{ color: '#e0f2fe' }} />}
+            {userLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           </IconButton>
           <Text>{likesCount}</Text>
         </HStack>
