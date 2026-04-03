@@ -1,7 +1,17 @@
-import { CardRoot, CardHeader, CardBody, CardFooter, Text, AvatarRoot, AvatarImage, AvatarFallback, Flex, IconButton, VStack, HStack } from '@chakra-ui/react'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import CommentIcon from '@mui/icons-material/Comment';
+import { useState } from 'react'
+import { CardRoot, CardHeader, CardBody, CardFooter, Text, AvatarRoot, AvatarImage, AvatarFallback, Flex, IconButton, VStack, HStack, Box } from '@chakra-ui/react'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import CommentIcon from '@mui/icons-material/Comment'
+import Comments from './comments'
+import CommentForm from './commentForm'
+import { Comment } from './commentCard'
+
+interface Like {
+  userId: number | string
+}
+
+type PostComment = Comment
 
 interface Post {
   id: number
@@ -12,8 +22,8 @@ interface Post {
     username: string
     profilePic: string
   }
-  likes: Array<any>
-  comments: Array<any>
+  likes: Like[]
+  comments: PostComment[]
 }
 
 interface PostCardProps {
@@ -23,18 +33,26 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, currentUserId, onLike }: PostCardProps) {
-  const userLiked = post.likes.some((like: any) => like.userId.toString() === currentUserId)
+  const [showComments, setShowComments] = useState(false)
+  const [comments, setComments] = useState<PostComment[]>(post.comments || [])
+
+  const userLiked = post.likes.some((like) => like.userId.toString() === currentUserId)
   const likesCount = post.likes.length
-  const commentsCount = post.comments.length
 
   const formatDate = (date: string) => {
     const d = new Date(date)
-    return d.toLocaleDateString('en-US', { 
-      month: 'short', 
+    return d.toLocaleDateString('en-US', {
+      month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  const toggleComments = () => setShowComments((prev) => !prev)
+
+  const handleCommentCreated = (newComment: PostComment) => {
+    setComments((prev) => [...prev, newComment])
   }
 
   return (
@@ -42,8 +60,8 @@ export function PostCard({ post, currentUserId, onLike }: PostCardProps) {
       <CardHeader display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" gap={4}>
         <Flex alignItems="center" gap={4}>
           <AvatarRoot>
-            <AvatarImage 
-              src={`/profilepics/${post.user.profilePic}.png`} 
+            <AvatarImage
+              src={`/profilepics/${post.user.profilePic}.png`}
               alt={post.user.name || post.user.username}
             />
             <AvatarFallback>{post.user.name?.charAt(0) || post.user.username.charAt(0)}</AvatarFallback>
@@ -71,11 +89,18 @@ export function PostCard({ post, currentUserId, onLike }: PostCardProps) {
           </IconButton>
           <Text>{likesCount}</Text>
         </HStack>
-        <HStack gap={2}>
-          <CommentIcon style={{ cursor: 'pointer', opacity: 0.7 }} />
-          <Text>{commentsCount}</Text>
+        <HStack gap={2} onClick={toggleComments} style={{ cursor: 'pointer' }}>
+          <CommentIcon style={{ opacity: 0.7 }} />
+          <Text>{comments.length}</Text>
         </HStack>
       </CardFooter>
+
+      <Box mt={1}>
+        {showComments && (
+          <CommentForm postId={post.id} onCommentCreated={handleCommentCreated} />
+        )}
+        <Comments comments={comments} />
+      </Box>
     </CardRoot>
   )
 }

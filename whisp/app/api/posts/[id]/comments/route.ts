@@ -4,8 +4,11 @@ import { authOptions } from '../../../auth/[...nextauth]/route'
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params
+  const postId = Number(resolvedParams.id)
+
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
@@ -13,7 +16,6 @@ export async function POST(
   }
 
   const { content } = await req.json()
-  const postId = Number(params.id)
   const userId = parseInt(session.user.id)
 
   if (!content || content.trim() === '') {
@@ -43,9 +45,10 @@ export async function POST(
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const postId = Number(params.id)
+  const resolvedParams = await params
+  const postId = Number(resolvedParams.id)
 
   const comments = await prisma.comment.findMany({
     where: { postId },

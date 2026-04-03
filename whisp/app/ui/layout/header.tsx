@@ -9,7 +9,8 @@ export function Header() {
   const router = useRouter()
 
   return (
-    <Box as="header" p={4} bg="brand.900" color="white" shadow="md">
+    <header>
+    <Box as="header" p={4} bg="black" color="white" shadow="md">
       <Flex justify="space-between" align="center">
         <Image
           src="/logo.png"
@@ -19,7 +20,7 @@ export function Header() {
           objectFit="contain"
           cursor="pointer"
           onClick={() => router.push('/')}
-        />
+          />
         
         {session?.user ? (
           <AvatarRoot
@@ -31,7 +32,7 @@ export function Header() {
             <AvatarImage
               src={`/profilepics/${session.user.profilePic || 'default'}.png`}
               alt={session.user.name || 'User'}
-            />
+              />
             <AvatarFallback>{session.user.name?.charAt(0) || 'U'}</AvatarFallback>
           </AvatarRoot>
         ) : (
@@ -46,5 +47,6 @@ export function Header() {
         )}
       </Flex>
     </Box>
+</header>
   )
 }

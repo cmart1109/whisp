@@ -30,7 +30,7 @@ export default function Home() {
       gridTemplateColumns: '1fr 4fr',
       minHeight: '100vh' }}>
         
-      <div style={{ padding: '1rem' }}>
+      <div>
       <NavBar/>
       </div>
       <div>

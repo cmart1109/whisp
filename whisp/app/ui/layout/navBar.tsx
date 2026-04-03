@@ -9,10 +9,18 @@ export default function NavBar() {
   return (
     <nav style={{
         display: 'flex',
+        backgroundColor: '#1B1B1E',
+        height: '100%',
+        padding: '10px',
     }}>
-      <ul >
+      <ul 
+        style={{
+          listStyle: 'none',
+          width: '100%',
+        }}>
         <li>
             <Link href="/"
+            width="100%"
             padding={4}
             colorScheme="brand.800"
             transition="all 0.3s ease-in-out"
@@ -27,6 +35,7 @@ export default function NavBar() {
         </li>
         <li>
             <Link href="/"
+            width="100%"
             padding={4}
             colorScheme="brand.800"
             transition="all 0.3s ease-in-out"
@@ -41,6 +50,7 @@ export default function NavBar() {
         </li>
         <li>
             <Link href="/create"
+            width="100%"
             padding={4}
             colorScheme="brand.800"
             transition="all 0.3s ease-in-out"
@@ -55,6 +65,7 @@ export default function NavBar() {
         </li>
         <li>
             <Link href="/profile"
+            width="100%"
             padding={4}
             colorScheme="brand.800"
             transition="all 0.3s ease-in-out"
