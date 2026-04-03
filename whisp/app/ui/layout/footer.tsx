@@ -11,10 +11,10 @@ export function Footer() {
     >
       <Text textAlign="center">© 2026 Whisp. All rights reserved.</Text>
       <Box display="flex" justifyContent="center" mt={2} gap={4}>
-        <a href="https://github.com/whisp" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/cmart1109/whisp.git" target="_blank" rel="noopener noreferrer">
           <GitHubIcon />
         </a>
-        <a href="https://linkedin.com/company/whisp" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.linkedin.com/in/ch-martinez2002/" target="_blank" rel="noopener noreferrer">
           <LinkedInIcon />
         </a>
       </Box>
