@@ -40,7 +40,7 @@ export default function NavBar() {
             </Link>
         </li>
         <li>
-            <Link href="/"
+            <Link href="/create"
             padding={4}
             colorScheme="brand.800"
             transition="all 0.3s ease-in-out"

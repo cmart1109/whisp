@@ -8,22 +8,49 @@ datasource db {
 }
 
 model Post {
+  id        Int       @id @default(autoincrement())
+  content   String
+  createdAt DateTime  @default(now())
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     Like[]
+  comments  Comment[]
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+}
+
+model Comment {
   id        Int      @id @default(autoincrement())
   content   String
+  postId    Int
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
-  likes     Int      @default(0)
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   name       String
-  username   String   @unique
-  email      String   @unique
+  username   String    @unique
+  email      String    @unique
   password   String?
-  profilePic String   @default("default")
-  createdAt  DateTime @default(now())
+  profilePic String    @default("default")
+  createdAt  DateTime  @default(now())
   accounts   Account[]
   sessions   Session[]
+  posts      Post[]
+  likes      Like[]
+  comments   Comment[]
 }
 
 model Account {

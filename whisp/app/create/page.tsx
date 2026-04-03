@@ -1,32 +1,14 @@
-'use client'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import CreateForm from "../ui/create/createForm"
 
-export default function Create() {
-  const [content, setContent] = useState('')
-  const router = useRouter()
-
-  const handleSubmit = async () => {
-    await fetch('/api/posts', {
-      method: 'POST',
-      body: JSON.stringify({ content })
-    })
-
-    router.push('/')
-  }
-
+export default function CreatePage() {
   return (
-    <div>
-      <h1>Crear Post</h1>
-
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-
-      <button onClick={handleSubmit}>
-        Publicar
-      </button>
+    <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#1a202c',
+    }}>
+        <CreateForm />
     </div>
-  )
-}
+)}
