@@ -1,10 +1,14 @@
 "use client"
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Input, InputGroup, Text, Box, Link} from '@chakra-ui/react'
 
 export default function registerForm() {
+  const router = useRouter()
   const [profilePic, setProfilePic] = useState('default')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const profilePicMap: Record<string,string> = {
     default: '/profilepics/avatar.png',
     cat: '/profilepics/cat.png',
@@ -18,7 +22,33 @@ export default function registerForm() {
   return (
     <Box maxW="400px" mx="auto" mt={10} p={6} borderRadius="md" shadow="md" bg="brand.900" width="60%">
     <Text fontSize="2xl" mb={6} color="brand.100" textAlign="center">Register</Text>
-    <form action="/api/register" method="POST"
+    {error && <Text color="red.500" mb={4} textAlign="center">{error}</Text>}
+    <form onSubmit={async (e) => {
+      e.preventDefault()
+      setIsLoading(true)
+      setError(null)
+      
+      try {
+        const formData = new FormData(e.currentTarget)
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          body: formData,
+        })
+        
+        const data = await response.json()
+        
+        if (!response.ok) {
+          setError(data.error || 'Registration failed')
+          setIsLoading(false)
+          return
+        }
+        
+        router.push('/login')
+      } catch (err) {
+        setError('An error occurred during registration')
+        setIsLoading(false)
+      }
+    }}
     style={{
         display: 'flex',
         flexDirection: 'column',
@@ -76,16 +106,18 @@ export default function registerForm() {
         <Input 
         textAlign="center"
         type="submit" 
-        value="Register" 
+        value={isLoading ? "Registering..." : "Register"}
+        disabled={isLoading}
         bg="brand.500" 
         border={1} 
         color="white" 
-        cursor="pointer" 
+        cursor={isLoading ? "not-allowed" : "pointer"}
         width="50%"
         fontWeight="bold"
         borderRadius="15px"
+        opacity={isLoading ? 0.6 : 1}
         _hover={{ 
-          bg: "brand.600", 
+          bg: isLoading ? "brand.500" : "brand.600", 
           transition: "background-color 0.3s ease-in-out"
           }} />
         </div>

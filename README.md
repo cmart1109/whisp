@@ -4,7 +4,7 @@ This project is a simple social media clone, like x, where you can write some po
 
 This software was written to communicate your ideas and share some fun jokes with others!
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Software Demo Video](https://youtu.be/eO5TFtJ0M4g)
 
 # Web Pages
 
