@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { CardRoot, CardHeader, CardBody, CardFooter, Text, AvatarRoot, AvatarImage, AvatarFallback, Flex, IconButton, VStack, HStack, Box } from '@chakra-ui/react'
