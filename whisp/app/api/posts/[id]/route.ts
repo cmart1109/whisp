@@ -1,22 +1,25 @@
+
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../../auth/[...nextauth]/route'
+import { NextRequest } from 'next/server';
 
 export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
-  console.log('PATCH /api/posts/', params.id)
-  const session = await getServerSession(authOptions)
+  const { id } = await context.params;
+  console.log('PATCH /api/posts/', id);
+  const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    console.log('No session')
-    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+    console.log('No session');
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const postId = Number(params.id)
-  const userId = parseInt(session.user.id)
-  console.log('User ID:', userId)
+  const postId = Number(id);
+  const userId = parseInt(session.user.id);
+  console.log('User ID:', userId);
 
   // Check if user already liked this post
   const existingLike = await prisma.like.findUnique({
@@ -26,7 +29,7 @@ export async function PATCH(
         userId
       }
     }
-  })
+  });
 
   if (existingLike) {
     // Unlike the post
@@ -37,8 +40,8 @@ export async function PATCH(
           userId
         }
       }
-    })
-    console.log('Unliked post')
+    });
+    console.log('Unliked post');
   } else {
     // Like the post
     await prisma.like.create({
@@ -46,8 +49,8 @@ export async function PATCH(
         postId,
         userId
       }
-    })
-    console.log('Liked post')
+    });
+    console.log('Liked post');
   }
 
   // Return updated post with like count
@@ -64,7 +67,7 @@ export async function PATCH(
       likes: true,
       comments: true
     }
-  })
+  });
 
-  return Response.json(post)
+  return Response.json(post);
 }
