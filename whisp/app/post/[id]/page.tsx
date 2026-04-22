@@ -11,7 +11,7 @@ export default async function PostPage({ params }: any) {
 
   return (
     <div>
-      <PostCard content={post.content} likes={post.likes} />
+      <PostCard post={post}/>
     </div>
   )
 }
